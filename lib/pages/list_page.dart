@@ -1,6 +1,6 @@
 import 'package:comic_salvat/models/comic_model.dart';
 import 'package:comic_salvat/services/comic_provider.dart';
-import 'package:comic_salvat/services/comic_service.dart' as ComicService;
+import 'package:comic_salvat/services/comic_service.dart';
 import 'package:comic_salvat/widgets/detail_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -98,9 +98,8 @@ class _ListComicFWState extends State<ListComicFW> {
     
     var textDismiss = Text('Mover de la lista', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16));
     final comicListProvider = Provider.of<ComicProvider>(context, listen: false);
-
     return FutureBuilder(
-      future: ComicService.getAll(indxIsExit),
+      future: ComicService.db.getAll(indxIsExit),
       builder: (BuildContext context, AsyncSnapshot <List<ComicModel>> snapshot){
         if (snapshot.hasData){
           List<ComicModel> listComic = snapshot.data as List<ComicModel>;
@@ -111,6 +110,14 @@ class _ListComicFWState extends State<ListComicFW> {
                 return DetailListW( dataComic: listComic[idx]);
               } else {
                 return Dismissible(
+                  confirmDismiss:  (DismissDirection direction) async {
+                    return await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ConfirmW();
+                      },
+                    );
+                  },
                   background: Container(
                     padding: EdgeInsets.all(10),
                     color: Colors.amber,
@@ -123,10 +130,13 @@ class _ListComicFWState extends State<ListComicFW> {
                       ],
                     ),
                   ),
-                  key: ValueKey<int>(listComic[idx].id as int),
+                  key: UniqueKey(),
                   child: DetailListW( dataComic: listComic[idx]),
                   onDismissed: (DismissDirection direction){
                     comicListProvider.changeIsExist(listComic[idx]);
+                    setState(() {
+                      
+                    });
                   },
                 );
               }
@@ -136,5 +146,34 @@ class _ListComicFWState extends State<ListComicFW> {
           return CircularProgressIndicator();
         }
     });
+  }
+}
+
+class ConfirmW extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Confirmar"),
+      content: Text("Deseas mover a otra lista este comic"),
+      actions: <Widget>[
+        TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.blueAccent,
+            elevation: 2,
+          ),
+          onPressed: () => Navigator.of(context).pop(true),
+          child: Text("MOVER", style: TextStyle(color: Colors.white))
+        ),
+        TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.red,
+            elevation: 2,
+          ),
+          onPressed: () => Navigator.of(context).pop(false),
+          child: Text("CANCELAR", style: TextStyle(color: Colors.white)),
+        ),
+      ],
+    );
   }
 }

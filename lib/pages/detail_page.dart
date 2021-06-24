@@ -48,7 +48,7 @@ class BodyDetailW extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+
     final _screamSize = MediaQuery.of(context).size;
 
     return ClipRRect(
@@ -82,7 +82,10 @@ class HeadDetailW extends StatelessWidget {
   Widget build(BuildContext context) {
   
     final _screamSize = MediaQuery.of(context).size;
-  
+    String _textStatus = 'Agregado';
+    if (this.dataComic.isExist == 0){
+      _textStatus = 'Pendiente';
+    }
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: Container(
@@ -101,22 +104,18 @@ class HeadDetailW extends StatelessWidget {
                 ),
                 SizedBox(width: 20),
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       width: _screamSize.width - 250,
+                      height: 120,
                       child: Text(
                         this.dataComic.title,
                         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
-                    IconButton(
-                      onPressed: (){
-                        print('Press');
-                      },
-                      icon: CircleAvatar(
-                        child: Icon(Icons.add),
-                      ),
-                    )
+                    Text('Estado: $_textStatus', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ],

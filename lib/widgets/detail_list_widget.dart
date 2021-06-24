@@ -44,19 +44,6 @@ class DetailListW extends StatelessWidget {
                   )
                 ),
               ),
-              /*
-              Container(
-                width: 40,
-                child: Column(
-                  children: [
-                    
-                    CircleAvatar(
-                      child: Icon(Icons.add_sharp, color: Colors.white),
-                      backgroundColor: Colors.amber,
-                    )
-                  ]
-                ),
-              )*/
             ],
           ),
           Divider(
