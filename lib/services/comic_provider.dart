@@ -1,5 +1,5 @@
 import 'package:comic_salvat/models/comic_model.dart';
-import 'package:comic_salvat/services/comic_service.dart' as ComicService;
+import 'package:comic_salvat/services/comic_service.dart';
 import 'package:flutter/material.dart';
 
 class ComicProvider  extends ChangeNotifier {
@@ -14,8 +14,8 @@ class ComicProvider  extends ChangeNotifier {
   List<ComicModel> scans = [];
 
   chargeComicByType(int isExist) async {
-    final comics = await ComicService.getAll(isExist);
-    final comicTotal = await ComicService.getTotalRows();
+    final comics = await ComicService.db.getAll(isExist);
+    final comicTotal = await ComicService.db.getTotalRows();
     this.comics = [... comics];
     this.isExist = isExist;
     this.pending = comicTotal.pending;
@@ -25,7 +25,7 @@ class ComicProvider  extends ChangeNotifier {
   }
 
   changeIsExist(ComicModel comic) async {
-    await ComicService.setExist(comic);
+    await ComicService.db.setExist(comic);
     chargeComicByType(this.isExist);
   }
 
